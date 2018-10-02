@@ -1,0 +1,29 @@
+{
+  "name": "mongoscraper",
+  "version": "1.0.0",
+  "description": "Week 18 HW",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d-car/mongoscraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/d-car/mongoscraper/issues"
+  },
+  "homepage": "https://github.com/d-car/mongoscraper#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.3.0",
+    "morgan": "^1.9.1",
+    "request": "^2.88.0"
+  }
+}
