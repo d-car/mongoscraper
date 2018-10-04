@@ -47,20 +47,18 @@ router.get("/scrape", function(req, res) {
             // View the added result in the console
             console.log(dbArticle);
           });
-      });
+      }).then(res.redirect('/'))
   
       // If we were able to successfully scrape and save an Article, send a message to the client
-      res.send("Scrape Complete");
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
       return res.json(err);
-    });
-    res.redirect('/');
+    })
 });
 
 // Route for getting all Articles from the db
-router.get("/api/articles", function(req, res) {
+router.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
   db.Article.find({})
     .then(function(dbArticle) {
@@ -73,25 +71,13 @@ router.get("/api/articles", function(req, res) {
     });
 });
 
-router.get("/articles", function(req, res) {
-  // Grab every document in the Articles collection
-  db.Article.find({})
-    .then(function(dbArticle) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.render("index");
-    })
-    .catch(function(err) {
-      throw err
-    });
-});
-
 router.get('/readArticle/:id', function(req, res){
   var articleId = req.params.id;
   var hbsObj = {
     article: [],
     body: []
   };
-  console.log(hbsObj)
+  // console.log(hbsObj)
 
     // //find the article at the id
     Article.findOne({ _id: articleId })
@@ -106,10 +92,10 @@ router.get('/readArticle/:id', function(req, res){
         //grab article from link
         request(link, function(error, response, html) {
           var $ = cheerio.load(html)
-          console.log("this is the html", html);
+          // console.log("this is the html", html);
 
 
-          $('article blockquote').each(function(i, element){
+          $('article').each(function(i, element){
             hbsObj.body = $(this).children('.messageText').text();
             //send article body and comments to article.handlbars through hbObj
             res.render('Article', hbsObj);
