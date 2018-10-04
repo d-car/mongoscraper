@@ -3,8 +3,11 @@ var router = express.Router();
 var cheerio = require('cheerio');
 var bodyParser = require("body-parser");
 var axios = require("axios");
+var request = require("request");
 
 // Require all models
+var Comment = require('../models/Comment.js');
+var Article = require('../models/Article.js');
 var db = require("../models");
 
 // Middleware
@@ -53,21 +56,54 @@ router.get("/scrape", function(req, res) {
       // If an error occurred, send it to the client
       return res.json(err);
     });
-  });
-  
-  // Route for getting all Articles from the db
-  router.get("/articles", function(req, res) {
-    // Grab every document in the Articles collection
-    db.Article.find({})
-      .then(function(dbArticle) {
-        // If we were able to successfully find Articles, send them back to the client
-        res.json(dbArticle);
-      })
-      .catch(function(err) {
-        // If an error occurred, send it to the client
-        res.json(err);
-      });
-  });
+});
+
+// Route for getting all Articles from the db
+router.get("/articles", function(req, res) {
+  // Grab every document in the Articles collection
+  db.Article.find({})
+    .then(function(dbArticle) {
+      // If we were able to successfully find Articles, send them back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+});
+
+router.get('/readArticle/:id', function(req, res){
+  var articleId = req.params.id;
+  var hbsObj = {
+    article: [],
+    body: []
+  };
+
+    // //find the article at the id
+    Article.findOne({ _id: articleId })
+      .populate('comment')
+      .exec(function(err, doc){
+      if(err){
+        console.log('Error: ' + err);
+      } else {
+        hbsObj.article = doc;
+        var link = doc.link;
+        //grab article from link
+        request(link, function(error, response, html) {
+          var $ = cheerio.load(html);
+
+          $('article blockquote').each(function(i, element){
+            hbsObj.body = $(this).children('.messageText').text();
+            //send article body and comments to article.handlbars through hbObj
+            res.render('article', hbsObj);
+            //prevents loop through so it doesn't return an empty hbsObj.body
+            return false;
+          });
+        });
+      }
+
+    });
+});
 
 
 module.exports = router;
