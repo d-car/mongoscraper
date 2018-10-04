@@ -56,10 +56,11 @@ router.get("/scrape", function(req, res) {
       // If an error occurred, send it to the client
       return res.json(err);
     });
+    res.redirect('/');
 });
 
 // Route for getting all Articles from the db
-router.get("/articles", function(req, res) {
+router.get("/api/articles", function(req, res) {
   // Grab every document in the Articles collection
   db.Article.find({})
     .then(function(dbArticle) {
@@ -72,12 +73,25 @@ router.get("/articles", function(req, res) {
     });
 });
 
+router.get("/articles", function(req, res) {
+  // Grab every document in the Articles collection
+  db.Article.find({})
+    .then(function(dbArticle) {
+      // If we were able to successfully find Articles, send them back to the client
+      res.render("index");
+    })
+    .catch(function(err) {
+      throw err
+    });
+});
+
 router.get('/readArticle/:id', function(req, res){
   var articleId = req.params.id;
   var hbsObj = {
     article: [],
     body: []
   };
+  console.log(hbsObj)
 
     // //find the article at the id
     Article.findOne({ _id: articleId })
@@ -87,15 +101,18 @@ router.get('/readArticle/:id', function(req, res){
         console.log('Error: ' + err);
       } else {
         hbsObj.article = doc;
-        var link = doc.link;
+        var link = "https://www.resetera.com/" + doc.link;
+        console.log("this is the link", link);
         //grab article from link
         request(link, function(error, response, html) {
-          var $ = cheerio.load(html);
+          var $ = cheerio.load(html)
+          console.log("this is the html", html);
+
 
           $('article blockquote').each(function(i, element){
             hbsObj.body = $(this).children('.messageText').text();
             //send article body and comments to article.handlbars through hbObj
-            res.render('article', hbsObj);
+            res.render('Article', hbsObj);
             //prevents loop through so it doesn't return an empty hbsObj.body
             return false;
           });
