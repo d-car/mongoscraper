@@ -21,7 +21,7 @@
             <form action="/comment/{{article._id}}" method="POST" class="col-lg-8">
                 <h5>Comment on this Article:</h5>
                 <div class="row">
-                    <input type="comment" class="form-control" id="exampleInputEmail1" aria-describedby="commentHelp" placeholder="Enter Comment">
+                    <input type="text" class="form-control" name="comment" id="commentBody" aria-describedby="commentHelp" placeholder="Enter Comment">
                     <small id="commentHelp" class="form-text text-muted">Share your comments</small>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -30,19 +30,18 @@
 
         {{!-- comments go here --}}
     <div class="row">
-        <div class="col-lg-12"></div>
-            <div class="col-lg-8">
+        <div class="col-lg-12">
             <h5>Comments:</h5>
-                {{#if article.comment}}
-                {{#each article.comment}}
-                    <div class="card">
-                    <p id="nameComment">{{name}}</p>
-                    <p>{{body}}<p>
-                    </div>
-                {{/each}}
-                {{else}}
-                <p>No Comments Yet.</p>
-                {{/if}}
+        </div>
+    </div>
+    <div class= "row">
+        {{#if article.comment}}
+        {{#each article.comment}}
+            <div class= "col-lg-12">
+                {{body}}
+            <hr>
             </div>
+        {{/each}}
+        {{/if}}
     </div>
 </div>

@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 var axios = require("axios");
 var request = require("request");
 
+
 // Require all models
 var Comment = require('../models/Comment.js');
 var Article = require('../models/Article.js');
@@ -45,7 +46,7 @@ router.get("/scrape", function(req, res) {
         db.Article.create(result)
           .then(function(dbArticle) {
             // View the added result in the console
-            console.log(dbArticle);
+            // console.log(dbArticle);
           });
       }).then(res.redirect('/'))
   
@@ -88,7 +89,7 @@ router.get('/readArticle/:id', function(req, res){
       } else {
         hbsObj.article = doc;
         var link = "https://www.resetera.com/" + doc.link;
-        console.log("this is the link", link);
+        // console.log("this is the link", link);
         //grab article from link
         request(link, function(error, response, html) {
           var $ = cheerio.load(html)
@@ -106,6 +107,40 @@ router.get('/readArticle/:id', function(req, res){
       }
 
     });
+});
+
+// Create a new comment
+
+router.post('/comment/:id', function(req, res) {
+  var content = req.body.comment
+  var articleId = req.params.id;
+  console.log("this is the comment", content)
+
+  //submitted form
+  var commentObj = {
+    body: content
+  };
+ 
+  //using the Comment model, create a new comment
+  var newComment = new Comment(commentObj);
+
+  newComment.save(function(err, doc) {
+      if (err) {
+          console.log(err);
+      } else {
+          console.log(doc._id)
+          console.log(articleId)
+          Article.findOneAndUpdate({ "_id": req.params.id }, {$push: {'comment':doc._id}}, {new: true})
+            //execute everything
+            .exec(function(err, doc) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect('/readArticle/' + articleId);
+                }
+            });
+        }
+  });
 });
 
 
