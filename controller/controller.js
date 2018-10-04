@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var cheerio = require('cheerio');
 var bodyParser = require("body-parser");
+var axios = require("axios");
 
 // Require all models
 var db = require("../models");

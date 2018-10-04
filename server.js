@@ -2,8 +2,6 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var axios = require("axios");
-var cheerio = require("cheerio");
 
 // Require all models
 var db = require("./models");
@@ -31,7 +29,11 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/artScrape");
+// mongoose.connect("mongodb://localhost/artScrape");
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
 
 var routes = require('./controller/controller.js');
 app.use('/', routes);
