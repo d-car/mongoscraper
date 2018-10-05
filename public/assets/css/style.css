@@ -1,6 +1,47 @@
-/* #articles {
-    display: inline-block;
-    overflow: auto;
-    width: 60%;
-    height: 700px;
-  } */
+body {
+  background-image: url("../images/vg-controllers.jpg")
+}
+
+form {
+  background: white;
+  padding: 15px;
+  border-radius: 25px;
+}
+
+.jumbotron {
+  margin-top: 25px;
+  background: white;
+  border-radius: 25px;
+}
+
+.navbar {
+  background: white;
+  border-radius: 25px;
+  position: relative;
+  bottom: 35px;
+
+}
+
+.col-lg-8 {
+  background: white;
+  padding: 15px;
+  border-radius: 25px;
+}
+
+.col-lg-12 {
+  background: white;
+  padding: 15px;
+  border-radius: 25px;
+}
+
+#articles {
+  background: white;;
+  padding: 15px;
+  border-radius: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 25px;
+  padding: 15px;
+}
