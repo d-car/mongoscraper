@@ -9,7 +9,6 @@ var request = require("request");
 // Require all models
 var Comment = require('../models/Comment.js');
 var Article = require('../models/Article.js');
-// var db = require("../models");
 
 // Middleware
 router.use(bodyParser.json());
@@ -46,7 +45,7 @@ router.get("/scrape", function(req, res) {
         Article.create(result)
           .then(function(dbArticle) {
             // View the added result in the console
-            // console.log(dbArticle);
+            console.log(dbArticle);
           });
       }).then(res.redirect('/'))
   
