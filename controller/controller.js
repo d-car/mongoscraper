@@ -47,7 +47,7 @@ router.get("/scrape", function(req, res) {
             // View the added result in the console
             console.log(dbArticle);
           });
-      }).then(res.redirect('/'))
+      })
   
       // If we were able to successfully scrape and save an Article, send a message to the client
     })
