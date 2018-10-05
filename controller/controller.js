@@ -9,7 +9,7 @@ var request = require("request");
 // Require all models
 var Comment = require('../models/Comment.js');
 var Article = require('../models/Article.js');
-var db = require("../models");
+// var db = require("../models");
 
 // Middleware
 router.use(bodyParser.json());
@@ -43,7 +43,7 @@ router.get("/scrape", function(req, res) {
           .attr("href");
   
         // Create a new Article using the `result` object built from scraping
-        db.Article.create(result)
+        Article.create(result)
           .then(function(dbArticle) {
             // View the added result in the console
             // console.log(dbArticle);
@@ -61,7 +61,7 @@ router.get("/scrape", function(req, res) {
 // Route for getting all Articles from the db
 router.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
-  db.Article.find({})
+  Article.find({})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
