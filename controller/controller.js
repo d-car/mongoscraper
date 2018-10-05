@@ -142,7 +142,7 @@ router.get('/readArticle/:id', function (req, res) {
           $('article').each(function (i, element) {
             hbsObj.body = $(this).children('.messageText').text();
             //send article body and comments to article.handlbars through hbObj
-            res.render('Article', hbsObj);
+            res.render('article', hbsObj);
             //prevents loop through so it doesn't return an empty hbsObj.body
             return false;
           });
