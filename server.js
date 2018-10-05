@@ -3,9 +3,6 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 
-// Require all models
-var db = require("./models");
-
 var PORT = process.env.PORT || 8080;
 
 // Initialize Express
