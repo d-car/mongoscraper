@@ -2,7 +2,7 @@
 
 # Getting Started
 
-Follow this link to use the app: HEROKU LINK
+Follow this link to use the app: https://mongo-vg-scraper.herokuapp.com/
 
 # Prerequisites
 - Node.js
