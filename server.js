@@ -14,7 +14,7 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
-// Configure middleware
+// Middleware
 
 // Morgan logger for logging requests
 app.use(logger("dev"));

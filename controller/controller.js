@@ -13,7 +13,7 @@ var Article = require('../models/Article.js');
 // Middleware
 router.use(bodyParser.json());
 
-//index
+// Index
 router.get("/", function (req, res) {
   res.render("index");
 });
@@ -42,23 +42,20 @@ router.get("/scrape", function (req, res) {
         .children("a")
         .attr("href");
 
-      //ensures that no empty title or links are sent to mongodb
+      // No empty title or links allowed in db
       if (result.title !== "" && result.link !== "") {
-        //check for duplicates
+        // If statement checking for duplicates/multiples
         if (titlesArray.indexOf(result.title) == -1) {
 
-          // push the saved title to the array 
           titlesArray.push(result.title);
 
-          // only add the article if is not already there
+          // Add only if test = 0 (article not in database)
           Article.count({ title: result.title }, function (err, test) {
-            //if the test is 0, the entry is unique and good to save
             if (test == 0) {
-
-              //using Article model, create new object
+              // New article using model
               var entry = new Article(result);
 
-              //save entry to mongodb
+              // Save entry to Sdb
               entry.save(function (err, doc) {
                 if (err) {
                   console.log(err);
@@ -70,47 +67,28 @@ router.get("/scrape", function (req, res) {
             }
           });
         }
-        // Log that scrape is working, just the content was missing parts
-        else {
-          console.log('Article already exists.')
-        }
-
       }
-      // Log that scrape is working, just the content was missing parts
-      else {
-        console.log('Not saved to DB, missing data')
-      }
-
-
-
-      // Create a new Article using the `result` object built from scraping
-    //   Article.create(result)
-    //     .then(function (dbArticle) {
-    //       // View the added result in the console
-    //       console.log(dbArticle);
-    //     });
     })
     res.redirect('/');
 
-    // If we were able to successfully scrape and save an Article, send a message to the client
+    // Send confirmation to client console
     console.log("Scrape Successful")
   })
     .catch(function (err) {
-      // If an error occurred, send it to the client
+      // Send error to client console
       return res.json(err);
     })
 });
 
-// Route for getting all Articles from the db
+// Route to grab all articles
 router.get("/articles", function (req, res) {
-  // Grab every document in the Articles collection
   Article.find({})
     .then(function (dbArticle) {
-      // If we were able to successfully find Articles, send them back to the client
+      // Send to client
       res.json(dbArticle);
     })
     .catch(function (err) {
-      // If an error occurred, send it to the client
+      // Send error to client if err
       res.json(err);
     });
 });
@@ -133,17 +111,16 @@ router.get('/readArticle/:id', function (req, res) {
         hbsObj.article = doc;
         var link = "https://www.resetera.com/" + doc.link;
         // console.log("this is the link", link);
-        //grab article from link
+
         request(link, function (error, response, html) {
           var $ = cheerio.load(html)
           // console.log("this is the html", html);
 
-
           $('article').each(function (i, element) {
             hbsObj.body = $(this).children('.messageText').text();
-            //send article body and comments to article.handlbars through hbObj
+            // Send article body and comments to article.handlbars through hbObj
             res.render('article', hbsObj);
-            //prevents loop through so it doesn't return an empty hbsObj.body
+            // Prevents loop through so it doesn't return an empty hbsObj.body
             return false;
           });
         });
@@ -152,19 +129,19 @@ router.get('/readArticle/:id', function (req, res) {
     });
 });
 
-// Create a new comment
+// New Comments
 
 router.post('/comment/:id', function (req, res) {
   var content = req.body.comment
   var articleId = req.params.id;
   console.log("this is the comment", content)
 
-  //submitted form
+  // Submitted form
   var commentObj = {
     body: content
   };
 
-  //using the Comment model, create a new comment
+  // Create comment with model
   var newComment = new Comment(commentObj);
 
   newComment.save(function (err, doc) {
@@ -174,7 +151,6 @@ router.post('/comment/:id', function (req, res) {
       console.log(doc._id)
       console.log(articleId)
       Article.findOneAndUpdate({ "_id": req.params.id }, { $push: { 'comment': doc._id } }, { new: true })
-        //execute everything
         .exec(function (err, doc) {
           if (err) {
             console.log(err);
